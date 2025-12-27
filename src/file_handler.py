@@ -1,42 +1,43 @@
 import csv
 import os
-from expense import Expense
-from constants import EXPENSE_FILE, BACKUP_FILE
+from src.constants import CSV_HEADERS, DATA_FILE_PATH
+from src.expense import Expense
 
-def save_expenses(expenses):
-    with open(EXPENSE_FILE, "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Date", "Category", "Amount", "Description"])
-        for e in expenses:
-            writer.writerow(e.to_list())
+
+def initialize_file():
+    os.makedirs(os.path.dirname(DATA_FILE_PATH), exist_ok=True)
+
+    if not os.path.exists(DATA_FILE_PATH):
+        with open(DATA_FILE_PATH, mode="w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=CSV_HEADERS)
+            writer.writeheader()
+
+
+def save_expense(expense: Expense):
+    initialize_file()
+    with open(DATA_FILE_PATH, mode="a", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=CSV_HEADERS)
+        writer.writerow(expense.to_dict())
 
 
 def load_expenses():
+    initialize_file()
     expenses = []
-    if not os.path.exists(EXPENSE_FILE):
-        return expenses
 
-    with open(EXPENSE_FILE, "r") as file:
+    with open(DATA_FILE_PATH, mode="r", newline="", encoding="utf-8-sig") as file:
         reader = csv.DictReader(file)
+
         for row in reader:
+            # Normalize keys to lowercase
+            row = {k.strip().lower(): v for k, v in row.items()}
+
             expenses.append(
                 Expense(
-                    row["Amount"],
-                    row["Category"],
-                    row["Date"],
-                    row["Description"]
+                    row["date"],
+                    row["category"],
+                    float(row["amount"]),
+                    row.get("description", "")
                 )
             )
+
     return expenses
-
-
-def backup_data():
-    if os.path.exists(EXPENSE_FILE):
-        with open(EXPENSE_FILE, "r") as src, open(BACKUP_FILE, "w") as dst:
-            dst.write(src.read())
-
-
-def restore_data():
-    if os.path.exists(BACKUP_FILE):
-        with open(BACKUP_FILE, "r") as src, open(EXPENSE_FILE, "w") as dst:
-            dst.write(src.read())

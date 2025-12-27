@@ -1,13 +1,17 @@
 from collections import defaultdict
+from src.file_handler import load_expenses
 
-def total_expenses(expenses):
-    return sum(e.amount for e in expenses)
 
-def average_expense(expenses):
-    return total_expenses(expenses) / len(expenses) if expenses else 0
+def total_expense():
+    expenses = load_expenses()
+    return sum(exp.amount for exp in expenses)
 
-def category_wise_summary(expenses):
-    summary = defaultdict(float)
-    for e in expenses:
-        summary[e.category] += e.amount
-    return summary
+
+def category_wise_report():
+    expenses = load_expenses()
+    report = defaultdict(float)
+
+    for exp in expenses:
+        report[exp.category] += exp.amount
+
+    return dict(report)

@@ -1,14 +1,26 @@
-from validators import format_amount
+from src.validators import validate_date, validate_amount, validate_category
+
 
 class Expense:
-    def __init__(self, amount, category, date, description):
-        self.amount = format_amount(float(amount))
-        self.category = category
+    def __init__(self, date, category, amount, description=""):
+        if not validate_date(date):
+            raise ValueError("Invalid date format")
+
+        if not validate_amount(amount):
+            raise ValueError("Invalid amount")
+
+        if not validate_category(category):
+            raise ValueError("Invalid category")
+
         self.date = date
+        self.category = category
+        self.amount = amount
         self.description = description
 
-    def to_list(self):
-        return [self.date, self.category, self.amount, self.description]
-
-    def __str__(self):
-        return f"{self.date} | {self.category} | {self.amount:.2f} | {self.description}"
+    def to_dict(self):
+        return {
+            "date": self.date,
+            "category": self.category,
+            "amount": self.amount,
+            "description": self.description
+        }

@@ -1,5 +1,6 @@
-Date,Category,Amount,Description
+date,category,amount,description
 2025-01-01,Food,250,Lunch
 2025-01-02,Transport,120,Bus fare
 2025-01-03,Shopping,1500,Clothes
 2025-01-05,Entertainment,300,Movie
+2025-01-26,Food,2000.0,Butter Chicken
