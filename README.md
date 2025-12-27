@@ -12,7 +12,6 @@ The project follows **professional software quality standards**, including:
 - Automated testing
 - Clear documentation
 
-This project is suitable for **academic submissions, lab exams, training programs, and beginner-to-intermediate Python portfolios**.
 
 ---
 
